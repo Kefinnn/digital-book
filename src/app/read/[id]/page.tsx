@@ -3,8 +3,7 @@
 import React, { useState, useEffect, useMemo, use, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { BOOKS_DATA } from '@/lib/data';
-import { Book, Chapter } from '@/types/book';
+import { Chapter } from '@/types/book';
 import {
   ReaderSettings,
   defaultReaderSettings,
@@ -13,6 +12,7 @@ import {
 } from '@/lib/storage';
 import { useReadingProgress } from '@/hooks/useReadingProgress';
 import { useMyList } from '@/hooks/useMyList';
+import { useBooksCatalog } from '@/hooks/useBooksCatalog';
 import { ReaderView } from '@/components/reader/ReaderView';
 import {
   BookOpen,
@@ -37,13 +37,14 @@ export default function ReadPage({ params }: ReadPageProps) {
   const resolvedParams = use(params);
   const bookId = resolvedParams.id;
 
+  const { books } = useBooksCatalog();
   const { saveProgress } = useReadingProgress();
   const { isInMyList, toggleMyList } = useMyList();
 
-  // Find book in catalog
+  // Find book in live catalog
   const book = useMemo(() => {
-    return BOOKS_DATA.find((b) => b.id === bookId);
-  }, [bookId]);
+    return books.find((b) => b.id === bookId);
+  }, [books, bookId]);
 
   const [viewMode, setViewMode] = useState<'pdf' | 'synopsis'>('pdf');
   const [isPdfLoading, setIsPdfLoading] = useState(true);
@@ -82,14 +83,6 @@ export default function ReadPage({ params }: ReadPageProps) {
     }
   };
 
-  const handleUpdateSettings = (partial: Partial<ReaderSettings>) => {
-    setSettings((prev) => {
-      const next = { ...prev, ...partial };
-      saveReaderSettings(next);
-      return next;
-    });
-  };
-
   if (!book) {
     return (
       <div className="min-h-screen bg-[#141414] text-white flex flex-col items-center justify-center p-6 text-center space-y-4">
@@ -112,7 +105,9 @@ export default function ReadPage({ params }: ReadPageProps) {
   }
 
   const isSaved = isInMyList(book.id);
-  const proxyPdfUrl = `/api/pdf-proxy?url=${encodeURIComponent(book.pdfUrl)}#toolbar=1&navpanes=1&view=FitH`;
+  const proxyPdfUrl = book.pdfUrl.startsWith('/')
+    ? `${book.pdfUrl}#toolbar=1&navpanes=1&view=FitH`
+    : `/api/pdf-proxy?url=${encodeURIComponent(book.pdfUrl)}#toolbar=1&navpanes=1&view=FitH`;
   const currentChapter: Chapter = book.chapters[0] || {
     id: `${book.id}-ch-1`,
     title: `Sinopsis: ${book.title}`,

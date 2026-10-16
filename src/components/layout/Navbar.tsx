@@ -174,13 +174,22 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
             {/* Profile Dropdown */}
             {showProfileMenu && (
               <div
-                className="absolute right-0 mt-3 w-56 bg-[#181818] border border-neutral-800 rounded-md shadow-2xl py-2 z-50 text-sm text-neutral-300 animate-in fade-in zoom-in-95 duration-150"
+                className="absolute right-0 mt-3 w-60 bg-[#181818] border border-neutral-800 rounded-md shadow-2xl py-2 z-50 text-sm text-neutral-300 animate-in fade-in zoom-in-95 duration-150"
                 onMouseLeave={() => setShowProfileMenu(false)}
               >
                 <div className="px-4 py-2 border-b border-neutral-800">
                   <p className="font-semibold text-white">Khaefin Bookworm</p>
-                  <p className="text-xs text-neutral-400">Pembaca Premium</p>
+                  <p className="text-xs text-neutral-400">Administrator &bull; Pustaka</p>
                 </div>
+
+                <Link
+                  href="/admin"
+                  onClick={() => setShowProfileMenu(false)}
+                  className="flex items-center gap-2.5 px-4 py-2.5 hover:bg-neutral-800 hover:text-white transition font-medium text-white"
+                >
+                  <BookOpen className="w-4 h-4 text-[#E50914]" />
+                  <span>Panel Admin Studio</span>
+                </Link>
 
                 <Link
                   href="/my-list"
@@ -192,10 +201,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                 </Link>
 
                 <div className="px-4 py-2 text-xs text-neutral-400 border-t border-neutral-800">
-                  <p className="font-medium text-neutral-300 mb-1">Status Sinkronisasi</p>
+                  <p className="font-medium text-neutral-300 mb-1">Status Katalog</p>
                   <div className="flex items-center gap-1.5 text-emerald-400">
                     <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span>Firebase Siap Dihubungkan</span>
+                    <span>Sinkron Real-Time Aktif</span>
                   </div>
                 </div>
 
@@ -204,7 +213,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                     onClick={() => setShowProfileMenu(false)}
                     className="w-full text-left px-4 py-2 text-xs text-neutral-400 hover:text-white hover:bg-neutral-800 transition"
                   >
-                    Keluar dari Bookflix
+                    Tutup Menu
                   </button>
                 </div>
               </div>
@@ -235,6 +244,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
               {link.label}
             </Link>
           ))}
+          <Link
+            href="/admin"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="block py-2 text-base font-semibold text-[#E50914] hover:text-white transition border-t border-neutral-800 pt-3 mt-2"
+          >
+            Panel Admin Studio
+          </Link>
         </div>
       )}
     </header>

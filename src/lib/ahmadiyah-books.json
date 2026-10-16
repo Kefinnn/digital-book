@@ -309,7 +309,7 @@
     ],
     "pdfUrl": "https://ahmadiyah.id/download/25730/",
     "detailUrl": "https://ahmadiyah.id/buku-al-wasiat",
-    "isFeatured": true,
+    "isFeatured": false,
     "chapters": [
       {
         "id": "al-wasiat-ch-1",
@@ -1572,7 +1572,7 @@
     ],
     "pdfUrl": "https://ahmadiyah.id/download/10136/",
     "detailUrl": "https://ahmadiyah.id/pustaka/buku/riwayat-rasulullah",
-    "isFeatured": true,
+    "isFeatured": false,
     "chapters": [
       {
         "id": "riwayat-rasulullah-saw-ch-1",

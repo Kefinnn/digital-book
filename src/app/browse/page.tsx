@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { BOOKS_DATA, CATEGORY_ROWS } from '@/lib/data';
+import { CATEGORY_ROWS } from '@/lib/data';
 import { Book } from '@/types/book';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
@@ -10,9 +10,11 @@ import { BookRow } from '@/components/browse/BookRow';
 import { BookCard } from '@/components/browse/BookCard';
 import { BookDetailModal } from '@/components/browse/BookDetailModal';
 import { useReadingProgress } from '@/hooks/useReadingProgress';
-import { Search, Sparkles } from 'lucide-react';
+import { useBooksCatalog } from '@/hooks/useBooksCatalog';
+import { Search } from 'lucide-react';
 
 export default function BrowsePage() {
+  const { books } = useBooksCatalog();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -36,16 +38,20 @@ export default function BrowsePage() {
     return () => window.removeEventListener('hashchange', scrollToHash);
   }, []);
 
-  // Featured book for Hero Banner
+  // Featured book for Hero Banner (dynamically synced with Admin Hero selection)
   const featuredBook = useMemo(() => {
-    return BOOKS_DATA.find((b) => b.id === 'filsafat-ajaran-islam') || BOOKS_DATA[0];
-  }, []);
+    return (
+      books.find((b) => b.isFeatured) ||
+      books.find((b) => b.id === 'filsafat-ajaran-islam') ||
+      books[0]
+    );
+  }, [books]);
 
   // Filter books based on search query
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const q = searchQuery.toLowerCase();
-    return BOOKS_DATA.filter(
+    return books.filter(
       (b) =>
         b.title.toLowerCase().includes(q) ||
         b.author.toLowerCase().includes(q) ||
@@ -54,7 +60,7 @@ export default function BrowsePage() {
         b.genre.some((g) => g.toLowerCase().includes(q)) ||
         b.tags.some((t) => t.toLowerCase().includes(q))
     );
-  }, [searchQuery]);
+  }, [searchQuery, books]);
 
   const handleOpenDetail = (book: Book) => {
     setSelectedBook(book);
@@ -68,13 +74,13 @@ export default function BrowsePage() {
   // Find similar books for the detail modal
   const similarBooks = useMemo(() => {
     if (!selectedBook) return [];
-    return BOOKS_DATA.filter(
+    return books.filter(
       (b) =>
         b.id !== selectedBook.id &&
         (b.category === selectedBook.category ||
           b.genre.some((g) => selectedBook.genre.includes(g)))
     );
-  }, [selectedBook]);
+  }, [selectedBook, books]);
 
   return (
     <div className="min-h-screen bg-[#141414] text-white flex flex-col overflow-x-hidden">
@@ -122,15 +128,17 @@ export default function BrowsePage() {
           /* Standard Netflix Browse View */
           <>
             {/* Hero Banner */}
-            <HeroBanner
-              book={featuredBook}
-              onOpenDetail={handleOpenDetail}
-            />
+            {featuredBook && (
+              <HeroBanner
+                book={featuredBook}
+                onOpenDetail={handleOpenDetail}
+              />
+            )}
 
             {/* Categorized Book Rows */}
             <div className="-mt-14 sm:-mt-20 relative z-20 space-y-2">
               {CATEGORY_ROWS.map((category) => {
-                const filteredBooks = BOOKS_DATA.filter(category.filter);
+                const filteredBooks = books.filter(category.filter);
 
                 return (
                   <BookRow

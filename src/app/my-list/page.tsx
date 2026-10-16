@@ -2,10 +2,10 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { BOOKS_DATA } from '@/lib/data';
 import { Book } from '@/types/book';
 import { useMyList } from '@/hooks/useMyList';
 import { useReadingProgress } from '@/hooks/useReadingProgress';
+import { useBooksCatalog } from '@/hooks/useBooksCatalog';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { BookCard } from '@/components/browse/BookCard';
@@ -13,14 +13,15 @@ import { BookDetailModal } from '@/components/browse/BookDetailModal';
 import { Bookmark, Compass } from 'lucide-react';
 
 export default function MyListPage() {
+  const { books } = useBooksCatalog();
   const { myList } = useMyList();
   const { progressMap } = useReadingProgress();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const savedBooks = useMemo(() => {
-    return BOOKS_DATA.filter((book) => myList.includes(book.id));
-  }, [myList]);
+    return books.filter((book) => myList.includes(book.id));
+  }, [myList, books]);
 
   const handleOpenDetail = (book: Book) => {
     setSelectedBook(book);
@@ -29,13 +30,13 @@ export default function MyListPage() {
 
   const similarBooks = useMemo(() => {
     if (!selectedBook) return [];
-    return BOOKS_DATA.filter(
+    return books.filter(
       (b) =>
         b.id !== selectedBook.id &&
         (b.category === selectedBook.category ||
           b.genre.some((g) => selectedBook.genre.includes(g)))
     );
-  }, [selectedBook]);
+  }, [selectedBook, books]);
 
   return (
     <div className="min-h-screen bg-[#141414] text-white flex flex-col">
