@@ -50,7 +50,7 @@ export const BookRow: React.FC<BookRowProps> = ({
   if (!books || books.length === 0) return null;
 
   return (
-    <section id={id} className="relative my-6 md:my-10 px-4 sm:px-6 lg:px-8 group/row">
+    <section id={id} className="relative my-6 md:my-10 px-4 sm:px-6 lg:px-8 scroll-mt-24 md:scroll-mt-28 group/row">
       {/* Row Header */}
       <div className="flex items-baseline justify-between mb-3">
         <div>

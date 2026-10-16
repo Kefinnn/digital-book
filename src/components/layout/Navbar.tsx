@@ -20,9 +20,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
 
   const navLinks = [
     { label: 'Beranda', href: '/browse' },
-    { label: 'Trending', href: '/browse#trending' },
-    { label: 'Fiksi Ilmiah', href: '/browse#sci-fi' },
-    { label: 'Pengembangan Diri', href: '/browse#self-help' },
+    { label: 'Karya Imam Mahdi', href: '/browse#imam-mahdi' },
+    { label: 'Karya Khalifah', href: '/browse#khalifah' },
+    { label: 'Karya Ulama', href: '/browse#ulama' },
+    { label: 'Buku Lainnya', href: '/browse#lainnya' },
     { label: 'Daftar Saya', href: '/my-list' },
   ];
 
@@ -30,6 +31,41 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
     const q = e.target.value;
     setSearchQuery(q);
     if (onSearch) onSearch(q);
+  };
+
+  const handleNavClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    setIsMobileMenuOpen(false);
+
+    if (href.startsWith('/browse#')) {
+      const targetId = href.split('#')[1];
+      if (pathname === '/browse') {
+        e.preventDefault();
+        if (searchQuery) {
+          setSearchQuery('');
+          setIsSearchOpen(false);
+          if (onSearch) onSearch('');
+        }
+        window.history.pushState(null, '', href);
+        requestAnimationFrame(() => {
+          const el = document.getElementById(targetId);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      }
+    } else if (href === '/browse' && pathname === '/browse') {
+      e.preventDefault();
+      if (searchQuery) {
+        setSearchQuery('');
+        setIsSearchOpen(false);
+        if (onSearch) onSearch('');
+      }
+      window.history.pushState(null, '', '/browse');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (
@@ -43,7 +79,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 md:h-20 flex items-center justify-between gap-4">
         {/* Left: Brand Logo & Desktop Nav Links */}
         <div className="flex items-center gap-8">
-          <Link href="/browse" className="flex items-center gap-2 group">
+          <Link
+            href="/browse"
+            onClick={(e) => handleNavClick(e, '/browse')}
+            className="flex items-center gap-2 group"
+          >
             <span className="text-[#E50914] font-black text-2xl md:text-3xl tracking-tighter uppercase font-sans group-hover:scale-105 transition-transform duration-200">
               BOOK<span className="text-white">FLIX</span>
             </span>
@@ -57,6 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
                 <Link
                   key={link.label}
                   href={link.href}
+                  onClick={(e) => handleNavClick(e, link.href)}
                   className={`text-sm transition-colors duration-200 ${
                     isActive
                       ? 'text-white font-semibold'
@@ -188,7 +229,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearch }) => {
             <Link
               key={link.label}
               href={link.href}
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={(e) => handleNavClick(e, link.href)}
               className="block py-2 text-base font-medium text-neutral-200 hover:text-[#E50914] transition"
             >
               {link.label}

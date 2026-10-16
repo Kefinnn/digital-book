@@ -36,15 +36,15 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ book, onOpenDetail }) =>
       </div>
 
       {/* Hero Content */}
-      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-16">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-16 flex items-center justify-between gap-8">
         <div className="max-w-2xl space-y-4">
           {/* Top meta badge */}
           <div className="flex items-center gap-2.5 flex-wrap">
             <span className="bg-[#E50914] text-white font-extrabold text-[11px] uppercase tracking-widest px-2.5 py-0.5 rounded shadow">
-              Buku Pilihan Utama
+              Pustaka Utama Ahmadiyah
             </span>
-            <Badge variant="match">{book.matchRate}% Cocok Untuk Anda</Badge>
-            <Badge variant="age">{book.maturityRating}</Badge>
+            <Badge variant="match">{book.matchRate}% Direkomendasikan</Badge>
+            <Badge variant="age">{book.categoryLabel || 'Karya Utama'}</Badge>
             <div className="flex items-center gap-1 text-amber-400 text-xs font-semibold">
               <Star className="w-3.5 h-3.5 fill-amber-400" />
               <span>{book.rating}</span>
@@ -56,10 +56,17 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ book, onOpenDetail }) =>
             {book.title}
           </h1>
 
-          {/* Author */}
-          <p className="text-base sm:text-lg text-neutral-300 font-medium">
-            Karya: <span className="text-white font-semibold">{book.author}</span>
-          </p>
+          {/* Author & Translator */}
+          <div className="space-y-1">
+            <p className="text-base sm:text-lg text-neutral-300 font-medium">
+              Penulis: <span className="text-white font-semibold">{book.author}</span>
+            </p>
+            {book.translator && (
+              <p className="text-xs sm:text-sm text-neutral-400">
+                Penerjemah: <span className="text-neutral-200 font-medium">{book.translator}</span>
+              </p>
+            )}
+          </div>
 
           {/* Synopsis */}
           <p className="text-sm sm:text-base text-neutral-300 line-clamp-3 leading-relaxed drop-shadow">
@@ -110,12 +117,23 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ book, onOpenDetail }) =>
             </Button>
           </div>
         </div>
+
+        {/* Featured Book Original Cover Preview on Desktop */}
+        <div className="hidden lg:block relative w-52 h-76 shrink-0 rounded-lg overflow-hidden shadow-2xl border border-white/15 transform rotate-2 hover:rotate-0 transition-transform duration-500 mr-8">
+          <Image
+            src={book.coverImage}
+            alt={book.title}
+            fill
+            sizes="220px"
+            className="object-cover"
+          />
+        </div>
       </div>
 
       {/* Right Edge Maturity & Format Tag */}
-      <div className="absolute right-0 bottom-24 z-20 hidden sm:flex items-center gap-3 bg-neutral-900/70 backdrop-blur-md border-l-4 border-neutral-400 py-1.5 px-4 text-xs font-semibold text-neutral-300">
-        <span>EDISI LENGKAP</span>
-        <Badge variant="format">E-PUB</Badge>
+      <div className="absolute right-0 bottom-24 z-20 hidden sm:flex items-center gap-3 bg-neutral-900/70 backdrop-blur-md border-l-4 border-[#E50914] py-1.5 px-4 text-xs font-semibold text-neutral-300">
+        <span>BACA LANGSUNG TANPA DOWNLOAD</span>
+        <Badge variant="format">PDF</Badge>
         <Badge variant="age">{book.maturityRating}</Badge>
       </div>
     </div>

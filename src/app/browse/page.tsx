@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { BOOKS_DATA, CATEGORY_ROWS } from '@/lib/data';
 import { Book } from '@/types/book';
 import { Navbar } from '@/components/layout/Navbar';
@@ -18,9 +18,27 @@ export default function BrowsePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const { progressMap } = useReadingProgress();
 
+  // Smoothly scroll to category section if URL has a #hash (e.g. navigated from /read/[id])
+  useEffect(() => {
+    const scrollToHash = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (!hash) return;
+      const el = document.getElementById(hash);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    };
+
+    scrollToHash();
+    window.addEventListener('hashchange', scrollToHash);
+    return () => window.removeEventListener('hashchange', scrollToHash);
+  }, []);
+
   // Featured book for Hero Banner
   const featuredBook = useMemo(() => {
-    return BOOKS_DATA.find((b) => b.id === 'dune-chronicles') || BOOKS_DATA[0];
+    return BOOKS_DATA.find((b) => b.id === 'filsafat-ajaran-islam') || BOOKS_DATA[0];
   }, []);
 
   // Filter books based on search query
@@ -31,6 +49,8 @@ export default function BrowsePage() {
       (b) =>
         b.title.toLowerCase().includes(q) ||
         b.author.toLowerCase().includes(q) ||
+        (b.translator && b.translator.toLowerCase().includes(q)) ||
+        (b.categoryLabel && b.categoryLabel.toLowerCase().includes(q)) ||
         b.genre.some((g) => g.toLowerCase().includes(q)) ||
         b.tags.some((t) => t.toLowerCase().includes(q))
     );
@@ -93,7 +113,7 @@ export default function BrowsePage() {
                   Tidak ditemukan buku dengan kata kunci &ldquo;{searchQuery}&rdquo;.
                 </p>
                 <p className="text-sm text-neutral-500">
-                  Coba cari berdasarkan judul seperti &quot;Dune&quot;, penulis seperti &quot;James Clear&quot;, atau genre seperti &quot;Fiksi Ilmiah&quot;.
+                  Coba cari berdasarkan judul seperti &quot;Filsafat Ajaran Islam&quot;, penulis seperti &quot;Mirza Ghulam Ahmad&quot;, atau kategori seperti &quot;Karya Khalifah&quot;.
                 </p>
               </div>
             )}

@@ -20,7 +20,7 @@ export const getSavedMyList = (): string[] => {
   if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(MY_LIST_STORAGE_KEY);
-    return raw ? JSON.parse(raw) : ['dune-chronicles', 'filosofi-teras'];
+    return raw ? JSON.parse(raw) : ['filsafat-ajaran-islam', 'riwayat-rasulullah-saw', 'penjelasan-ahmadiyah'];
   } catch (e) {
     console.error('Failed to load my list from storage', e);
     return [];
@@ -51,9 +51,9 @@ export const getStoredProgress = (): StoredProgress => {
     if (!raw) {
       // Default initial progress for continue-reading demo
       return {
-        'dune-chronicles': { chapterId: 'dune-ch-1', percent: 64, updatedAt: new Date().toISOString() },
-        'atomic-habits': { chapterId: 'atomic-ch-1', percent: 32, updatedAt: new Date().toISOString() },
-        'filosofi-teras': { chapterId: 'teras-ch-1', percent: 85, updatedAt: new Date().toISOString() },
+        'filsafat-ajaran-islam': { chapterId: 'filsafat-ajaran-islam-ch-1', percent: 45, updatedAt: new Date().toISOString() },
+        'riwayat-rasulullah-saw': { chapterId: 'riwayat-rasulullah-saw-ch-1', percent: 30, updatedAt: new Date().toISOString() },
+        'penjelasan-ahmadiyah': { chapterId: 'penjelasan-ahmadiyah-ch-1', percent: 70, updatedAt: new Date().toISOString() },
       };
     }
     return JSON.parse(raw);

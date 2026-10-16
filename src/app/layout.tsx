@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Bookflix - Netflix for Books',
-  description: 'Aplikasi membaca buku digital dengan antarmuka dan pengalaman pengguna ala Netflix.',
+  title: 'Bookflix - Pustaka Buku Digital Ahmadiyah Indonesia',
+  description: 'Baca langsung koleksi buku Islam dari Pustaka Jemaat Muslim Ahmadiyah Indonesia (ahmadiyah.id) di dalam browser tanpa perlu download.',
 };
 
 export default function RootLayout({
@@ -12,7 +12,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" className="dark h-full antialiased bg-[#141414]">
+    <html lang="id" className="dark h-full scroll-smooth antialiased bg-[#141414]">
       <body className="min-h-full flex flex-col bg-[#141414] text-[#e5e5e5] select-text">
         {children}
       </body>
