@@ -8,7 +8,10 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 <!-- END:nextjs-agent-rules -->
 
-## Git & GitHub Auto-Update Rule
+## Git & GitHub Workflow Rule
 
-Every time you complete code changes or modifications requested by the user, ALWAYS stage (`git add`), commit (`git commit` with a clear message), and ensure the changes are pushed (`git push`) to the remote GitHub repository (`origin`).
+- **Never run `git commit` automatically without the user's explicit instruction/approval.** The decision to commit always belongs to the user.
+- After completing code changes, **suggest** a clear commit message / `git commit` command to the user and wait for their confirmation before committing (or let the user run it themselves).
+- Note: A `.git/hooks/post-commit` hook is installed so that whenever a `git commit` is executed, it automatically pushes (`git push origin <branch>`) to GitHub.
+
 
